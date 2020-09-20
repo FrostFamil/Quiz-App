@@ -34,6 +34,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        progressBar.progress = 0;
         
         updateUI();
     }
@@ -43,12 +44,28 @@ class ViewController: UIViewController {
         let userAnswer = sender.currentTitle!;
         let actualAnswer = quiz[questionNumber].answer;
         
-        questionNumber+=1;
-        updateUI();
+        if userAnswer == actualAnswer {
+            sender.backgroundColor = UIColor.green;
+        }else {
+            sender.backgroundColor = UIColor.red;
+        }
+        
+        if questionNumber+1 < quiz.count {
+            questionNumber+=1;
+            progressBar.progress = Float(questionNumber + 1) / Float(quiz.count);
+        } else {
+            questionNumber=0;
+            progressBar.progress = 0;
+        }
+        
+        Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUI), userInfo: nil, repeats: true);
     }
     
-    func updateUI() {
+    @objc func updateUI() {
         questionLabel.text = quiz[questionNumber].text;
+        
+        trueButton.backgroundColor = UIColor.clear;
+        falseButton.backgroundColor = UIColor.clear;
     }
     
 }
